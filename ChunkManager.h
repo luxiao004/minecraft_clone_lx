@@ -33,9 +33,9 @@ private:
 	void generateChunkMesh(Chunk* chunk);
 
 	//异步加载
-	void startAsyncLoading();
-	void stopAsyncLoading();
-	void asyncLoadWorker();
+	//void startAsyncLoading();
+	//void stopAsyncLoading();
+	//void asyncLoadWorker();
 	// 辅助函数
 	bool shouldLoadChunk(const ChunkCoord& coord, const ChunkCoord& cameraChunk) const;
 	bool shouldUnloadChunk(const ChunkCoord& coord, const ChunkCoord& cameraChunk) const;
@@ -45,12 +45,12 @@ private:
 	std::unordered_map<ChunkCoord, Chunk*, ChunkCoord::Hash> chunks;
 
 	// 异步加载相关
-	bool asyncLoading = true;//控制是否启用异步加载
-	std::thread asyncThread;//后台线程对象，专门去处理加载队列 loadQueue
-	std::queue<ChunkCoord> loadQueue;//待加载的区块队列，线程安全地存储哪些区块需要生成
-	std::mutex queueMutex;//保护 loadQueue 的互斥锁
-	std::condition_variable queueCV;//条件变量（condition_variable），用于线程等待或被通知
-	bool stopAsync = false;
+	//bool asyncLoading = true;//控制是否启用异步加载
+	//std::thread asyncThread;//后台线程对象，专门去处理加载队列 loadQueue
+	//std::queue<ChunkCoord> loadQueue;//待加载的区块队列，线程安全地存储哪些区块需要生成
+	//std::mutex queueMutex;//保护 loadQueue 的互斥锁
+	//std::condition_variable queueCV;//条件变量（condition_variable），用于线程等待或被通知
+	//bool stopAsync = false;
 
 	int renderDistance;
 	ChunkCoord lastCameraChunk{ 0, 0 };

@@ -239,44 +239,48 @@ void Chunk::addFace(int x, int y, int z,FaceDir dir, BlockType block) {
 	float u1 = (texX + 1) * TEXTURE_SIZE;
 	float v1 = (texY + 1) * TEXTURE_SIZE;
 
+	// 计算区块在世界中的偏移量
+	float chunkOffsetX = coord.x * SIZE;
+	float chunkOffsetZ = coord.z * SIZE;
+
 	glm::vec3 v0p, v1p, v2p, v3p;
 
 	switch (dir) {
 	case EAST: // +X
-		v0p = { x + 1, y,   z +1};
-		v1p = { x + 1, y,   z };
-		v2p = { x + 1, y + 1, z  };
-		v3p = { x + 1, y + 1, z +1};
+		v0p = { chunkOffsetX + x + 1, y,   chunkOffsetZ + z + 1 };
+		v1p = { chunkOffsetX + x + 1, y,   chunkOffsetZ + z };
+		v2p = { chunkOffsetX + x + 1, y + 1, chunkOffsetZ + z };
+		v3p = { chunkOffsetX + x + 1, y + 1, chunkOffsetZ + z + 1 };
 		break;
 	case WEST: // -X
-		v0p = { x, y,   z };
-		v1p = { x, y,   z+1};
-		v2p = { x, y + 1, z+1 };
-		v3p = { x, y + 1, z  };
+		v0p = { chunkOffsetX + x, y,   chunkOffsetZ + z };
+		v1p = { chunkOffsetX + x, y,   chunkOffsetZ + z + 1 };
+		v2p = { chunkOffsetX + x, y + 1, chunkOffsetZ + z + 1 };
+		v3p = { chunkOffsetX + x, y + 1, chunkOffsetZ + z };
 		break;
 	case UP: // +Y
-		v0p = { x,   y + 1, z+1 };
-		v1p = { x + 1, y + 1, z+1 };
-		v2p = { x + 1, y + 1, z };
-		v3p = { x,   y + 1, z  };
+		v0p = { chunkOffsetX + x,   y + 1, chunkOffsetZ + z + 1 };
+		v1p = { chunkOffsetX + x + 1, y + 1, chunkOffsetZ + z + 1 };
+		v2p = { chunkOffsetX + x + 1, y + 1, chunkOffsetZ + z };
+		v3p = { chunkOffsetX + x,   y + 1, chunkOffsetZ + z };
 		break;
 	case DOWN: // -Y
-		v0p = { x,   y, z  };
-		v1p = { x + 1, y, z };
-		v2p = { x + 1, y, z+1};
-		v3p = { x,   y, z+1 };
+		v0p = { chunkOffsetX + x,   y, chunkOffsetZ + z };
+		v1p = { chunkOffsetX + x + 1, y, chunkOffsetZ + z };
+		v2p = { chunkOffsetX + x + 1, y, chunkOffsetZ + z + 1 };
+		v3p = { chunkOffsetX + x,   y, chunkOffsetZ + z + 1 };
 		break;
 	case NORTH: // -Z
-		v0p = { x + 1, y,   z };
-		v1p = { x,   y,   z };
-		v2p = { x,   y + 1, z };
-		v3p = { x + 1, y + 1, z };
+		v0p = { chunkOffsetX + x + 1, y,   chunkOffsetZ + z };
+		v1p = { chunkOffsetX + x,   y,   chunkOffsetZ + z };
+		v2p = { chunkOffsetX + x,   y + 1, chunkOffsetZ + z };
+		v3p = { chunkOffsetX + x + 1, y + 1, chunkOffsetZ + z };
 		break;
 	case SOUTH: // +Z
-		v0p = { x,   y,   z + 1 };
-		v1p = { x + 1, y,   z + 1 };
-		v2p = { x + 1, y + 1, z + 1 };
-		v3p = { x,   y + 1, z + 1 };
+		v0p = { chunkOffsetX + x,   y,   chunkOffsetZ + z + 1 };
+		v1p = { chunkOffsetX + x + 1, y,   chunkOffsetZ + z + 1 };
+		v2p = { chunkOffsetX + x + 1, y + 1, chunkOffsetZ + z + 1 };
+		v3p = { chunkOffsetX + x,   y + 1, chunkOffsetZ + z + 1 };
 		break;
 	}
 

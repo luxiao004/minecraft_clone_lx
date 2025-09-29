@@ -4,11 +4,11 @@
 
 ChunkManager::ChunkManager(int renderDistance) :renderDistance(renderDistance) {
 	std::cout << "ChunkManager initialized with render distance: " << renderDistance << std::endl;
-	startAsyncLoading();
+	//startAsyncLoading();
 }
 
 ChunkManager::~ChunkManager() {
-	stopAsyncLoading();//停止后台线程，不让它继续加载区块（否则可能在析构时还在访问 chunks）
+	//stopAsyncLoading();//停止后台线程，不让它继续加载区块（否则可能在析构时还在访问 chunks）
 	//清理所有区块
 	std::lock_guard<std::mutex> lock(chunksMutex);//进入临界区，加锁，防止同时有别的线程访问 chunks
 	for (auto& pair : chunks) {
@@ -43,27 +43,18 @@ void ChunkManager::update(const glm::vec3& cameraPosition) {
 			}
 		}
 	}
-	std::cout << "hi xjj" << std::endl;
-	//异步加载区块:保证同时只有一个线程在修改 loadQueue
-	{
-		std::lock_guard<std::mutex> lock(queueMutex);
-		for (const auto& coord : chunksToLoad) {
-			//检查是否已经加载或正在加载
-			bool shouldLoad = true;
-			{
-				std::lock_guard<std::mutex> chunkLock(chunksMutex);//加锁，保证线程安全
-				//下面这段代码只允许一个线程进入
-				if (chunks.find(coord) != chunks.end()) {// 在 map 里能找到这个坐标
-					shouldLoad = false;// 已经加载过了，就不需要再加载
-				}
-			}
-
-			if (shouldLoad) {
-				loadQueue.push(coord);
+	// 同步加载区块（移除了异步队列相关代码）
+	for (const auto& coord : chunksToLoad) {
+		bool shouldLoad = true;
+		{
+			std::lock_guard<std::mutex> chunkLock(chunksMutex);
+			if (chunks.find(coord) != chunks.end()) {
+				shouldLoad = false;
 			}
 		}
-		if (!loadQueue.empty()) {
-			queueCV.notify_one();//notify:通报，告知
+
+		if (shouldLoad) {
+			loadChunk(coord);  // 直接同步加载
 		}
 	}
 
@@ -159,7 +150,7 @@ bool ChunkManager::shouldUnloadChunk(const ChunkCoord& coord, const ChunkCoord& 
 	return distX > renderDistance + 2 || distZ > renderDistance + 2;
 }
 
-void ChunkManager::startAsyncLoading() {
+/*void ChunkManager::startAsyncLoading() {
 	if (asyncLoading && !asyncThread.joinable()) {//判断这个线程对象是否在运行
 		stopAsync = false;
 		//在新线程里执行 this->asyncLoadWorker()
@@ -208,4 +199,4 @@ void ChunkManager::asyncLoadWorker() {
 			loadChunk(coord);
 		}
 	}
-}
+}*/
